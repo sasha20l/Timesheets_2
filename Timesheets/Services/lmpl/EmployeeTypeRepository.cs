@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeeService.Dats;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,17 @@ namespace Timesheets.Services.Impl
 {
     public class EmployeeTypeRepository : IEmployeeTypeRepository
     {
-        public int Create(EmployeeType data) { throw new NotImplementedException(); }
+        public int Create(EmployeeType data)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IList<EmployeeType> GetAll()
+        public IList GetAll()
         {
             throw new NotImplementedException();
         }
@@ -27,11 +31,6 @@ namespace Timesheets.Services.Impl
         }
 
         public void Update(EmployeeType data)
-        {
-            throw new NotImplementedException();
-        }
-
-        IList IRepository<EmployeeType, int>.GetAll()
         {
             throw new NotImplementedException();
         }

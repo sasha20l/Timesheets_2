@@ -1,6 +1,10 @@
 using Timesheets.Services.Impl;
 using Timesheets.Services.lmpl;
 using Timesheets.Services;
+using Timesheets.Models.Options;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.Hosting;
+using NLog.Web;
 
 namespace Timesheets
 {
@@ -15,6 +19,30 @@ namespace Timesheets
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<IEmployeeTypeRepository, EmployeeTypeRepository>();
             builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+            #region Configure Options
+
+            builder.Services.Configure<LoggerOptions>(options =>
+              builder.Configuration.GetSection("Settings:Logger").Bind(options)
+            );
+
+            builder.Services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All | HttpLoggingFields.RequestQuery;
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+                logging.RequestHeaders.Add("Authorization");
+                logging.RequestHeaders.Add("X-Real-IP");
+                logging.RequestHeaders.Add("X-Forwarded-For");
+            });
+
+            builder.Host.ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+
+            }).UseNLog(new NLogAspNetCoreOptions() { RemoveLoggerFactoryFilter = true });
+            #endregion
 
 
 
@@ -33,9 +61,9 @@ namespace Timesheets
             }
 
            
-
             app.UseAuthorization();
 
+            app.UseHttpLogging();
 
             app.MapControllers();
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace Timesheets.Models 
-{ public class Employee 
+{ public class EmployeeDto 
     { 
         public int Id { get; set; } 
         public int DepartmentId { get; set; } 

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
+﻿using EmployeeService.Dats;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Timesheets.Models.Options;
+using Timesheets.Models;
 using Timesheets.Models.Request;
 using Timesheets.Services;
 
@@ -9,38 +12,75 @@ namespace Timesheets.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private readonly ILogger<EmployeeController> _logger;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IOptions<LoggerOptions> _loggerOptions;
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(ILogger<EmployeeController> logger, IOptions<LoggerOptions> loggerOptions, IEmployeeRepository employeeRepository)
         {
+            _logger = logger;
             _employeeRepository = employeeRepository;
+            _loggerOptions = loggerOptions;
         }
 
         [HttpPost("create")]
         public IActionResult Create([FromBody] CreateEmployeeRequest request)
         {
-            return Ok(_employeeRepository.Create(new Models.Employee
+            _logger.LogInformation("Employee add");
+            var log = _loggerOptions.Value.Path;
+
+            return Ok(_employeeRepository.Create(new Employee
             {
+
+                Id = request.Id,
                 DepartmentId = request.DepartmentId,
                 EmployeeTypeId = request.EmployeeTypeId,
                 FirstName = request.FirstName,
+                Surname = request.Surname,
                 Patronymic = request.Patronymic,
-                Salary = request.Salary,
-                Surname = request.Surname
+                Salary = request.Salary
 
             }));
         }
 
         [HttpGet("get/all")]
-        public IActionResult GetAllEmployees()
+        public ActionResult<List<EmployeeDto>> GetAllEmployee()
         {
-            return Ok(_employeeRepository.GetAll());
+            _logger.LogInformation("Employee getall");
+            var log = _loggerOptions.Value.Path;
+
+            return Ok(_employeeRepository.GetAll().Select(employee => new EmployeeDto
+            {
+                Id = employee.Id,
+                DepartmentId = employee.DepartmentId,
+                EmployeeTypeId = employee.EmployeeTypeId,
+                FirstName = employee.FirstName,
+                Surname = employee.Surname,
+                Patronymic = employee.Patronymic,
+                Salary = employee.Salary
+
+            }).ToList());
         }
 
         [HttpGet("get/{id}")]
-        public IActionResult GetByIdEmployees([FromRoute] int id)
+        public ActionResult<EmployeeDto> GetByIdEmployee([FromRoute] int id)
         {
-            return Ok(_employeeRepository.GetById(id));
+            _logger.LogInformation("Employee get");
+            var log = _loggerOptions.Value.Path;
+
+            var employee = _employeeRepository.GetById(id);
+
+            return Ok(new EmployeeDto
+            {
+                Id = employee.Id,
+                DepartmentId = employee.DepartmentId,
+                EmployeeTypeId = employee.EmployeeTypeId,
+                FirstName = employee.FirstName,
+                Surname = employee.Surname,
+                Patronymic = employee.Patronymic,
+                Salary = employee.Salary
+
+            });
         }
     }
 }

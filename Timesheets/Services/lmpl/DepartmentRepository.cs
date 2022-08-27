@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmployeeService.Dats;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,14 +10,19 @@ namespace Timesheets.Services.lmpl
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        public int Create(Department data) { throw new NotImplementedException(); }
+        public int Create(DepartmentDto data) { throw new NotImplementedException(); }
+
+        public int Create(Department data)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Delete(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Department> GetAll()
+        public IList GetAll()
         {
             throw new NotImplementedException();
         }
@@ -27,11 +33,6 @@ namespace Timesheets.Services.lmpl
         }
 
         public void Update(Department data)
-        {
-            throw new NotImplementedException();
-        }
-
-        IList IRepository<Department, Guid>.GetAll()
         {
             throw new NotImplementedException();
         }

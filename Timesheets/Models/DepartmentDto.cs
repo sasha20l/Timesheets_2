@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Timesheets.Models
 {
-    public class Department
+    public class DepartmentDto
     {
         public Guid Id { get; set; }
 
